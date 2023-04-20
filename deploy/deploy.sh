@@ -3,6 +3,7 @@
 # Variables
 APPLICATION_NAME="twitter-chatbot-scraper"
 ENVIRONMENT_NAME="twitter-chatbot-scraper-env"
+ENVIRONMENT_URL=$(aws elasticbeanstalk describe-environments --application-name "$APPLICATION_NAME" --environment-names "$ENVIRONMENT_NAME" --query "Environments[0].CNAME" --output text)
 S3_BUCKET_NAME="twitter-chatbot-scraper-bucket"
 S3_KEY="final.zip"
 REGION="us-east-1"
@@ -67,4 +68,6 @@ aws elasticbeanstalk create-environment \
   --version-label "v1" \
   --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=PYTHON_ENV,Value=python3.8 \
                     Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value="$INSTANCE_PROFILE_NAME"
-echo -e "\033[32mDeployment success[✓] \033[0m"
+echo -e "\033[32mDeployment success[✓], your beanstalk URL is below (note: if the page is not loading, wait a couple minutes for the beanstalk environment to fully load): \033[0m"
+
+echo -e "Beanstalk environment URL (clickable link): \033[34mhttps://$ENVIRONMENT_URL [✓] \033[0m"
