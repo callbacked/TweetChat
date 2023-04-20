@@ -53,6 +53,10 @@ aws iam attach-role-policy --role-name "$ROLE_NAME" --policy-arn arn:aws:iam::aw
 aws iam attach-role-policy --role-name "$ROLE_NAME" --policy-arn arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier
 echo -e "\033[32mPolicies attached[✓] \033[0m"
 
+#!/bin/bash
+
+# ... (existing code)
+
 echo -e "\033[33mFinalizing Beanstalk environment\033[0m"
 aws elasticbeanstalk create-application-version \
   --application-name "$APPLICATION_NAME" \
@@ -68,6 +72,24 @@ aws elasticbeanstalk create-environment \
   --version-label "v1" \
   --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=PYTHON_ENV,Value=python3.8 \
                     Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value="$INSTANCE_PROFILE_NAME"
-echo -e "\033[32mDeployment success[✓], your beanstalk URL is below (note: if the page is not loading, wait a couple minutes for the beanstalk environment to fully load): \033[0m"
+echo -e "\033[32mDeployment success[✓] \033[0m"
 
-echo -e "Beanstalk environment URL (clickable link): \033[34mhttps://$ENVIRONMENT_URL [✓] \033[0m"
+echo -e "\033[33mWaiting for environment to finish launching\033[0m"
+
+while true; do
+    ENVIRONMENT_STATUS=$(aws elasticbeanstalk describe-environments --application-name "$APPLICATION_NAME" --environment-names "$ENVIRONMENT_NAME" --query "Environments[0].Status" --output text --region "$REGION")
+    
+    if [[ "$ENVIRONMENT_STATUS" == "Ready" ]]; then
+        break
+    elif [[ "$ENVIRONMENT_STATUS" == "Terminated" ]]; then
+        echo -e "\033[31mEnvironment launch failed. Please check your configuration.\033[0m"
+        exit 1
+    else
+        echo -e "\033[33mEnvironment status: $ENVIRONMENT_STATUS. Waiting...\033[0m"
+        sleep 20
+    fi
+done
+
+echo -e "\033[33mRetrieving Beanstalk URL\033[0m"
+BEANSTALK_URL=$(aws elasticbeanstalk describe-environments --application-name "$APPLICATION_NAME" --environment-names "$ENVIRONMENT_NAME" --query "Environments[0].CNAME" --output text --region "$REGION")
+echo -e "\033[32mBeanstalk URL: $BEANSTALK_URL [✓] \033[0m"
