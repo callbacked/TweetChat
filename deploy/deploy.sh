@@ -1,6 +1,3 @@
-#!/bin/bash
-
-# Variables
 APPLICATION_NAME="twitter-chatbot-scraper"
 ENVIRONMENT_NAME="twitter-chatbot-scraper-env"
 ENVIRONMENT_URL=$(aws elasticbeanstalk describe-environments --application-name "$APPLICATION_NAME" --environment-names "$ENVIRONMENT_NAME" --query "Environments[0].CNAME" --output text)
@@ -31,7 +28,6 @@ aws s3api put-bucket-policy --bucket "$S3_BUCKET_NAME" --policy '{
   ]
 }'
 
-# Upload final.zip to S3 bucket
 aws s3 cp "./final.zip" "s3://$S3_BUCKET_NAME/$S3_KEY"
 aws s3 cp "./assets/bot-icon.png" "s3://twitter-chatbot-scraper-bucket"
 
@@ -53,9 +49,6 @@ aws iam attach-role-policy --role-name "$ROLE_NAME" --policy-arn arn:aws:iam::aw
 aws iam attach-role-policy --role-name "$ROLE_NAME" --policy-arn arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier
 echo -e "\033[32mPolicies attached[✓] \033[0m"
 
-#!/bin/bash
-
-# ... (existing code)
 
 echo -e "\033[33mFinalizing Beanstalk environment\033[0m"
 aws elasticbeanstalk create-application-version \
@@ -72,7 +65,6 @@ aws elasticbeanstalk create-environment \
   --version-label "v1" \
   --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=PYTHON_ENV,Value=python3.8 \
                     Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value="$INSTANCE_PROFILE_NAME"
-echo -e "\033[32mDeployment success[✓] \033[0m"
 
 echo -e "\033[33mWaiting for environment to finish launching\033[0m"
 
@@ -93,3 +85,4 @@ done
 echo -e "\033[33mRetrieving Beanstalk URL\033[0m"
 BEANSTALK_URL=$(aws elasticbeanstalk describe-environments --application-name "$APPLICATION_NAME" --environment-names "$ENVIRONMENT_NAME" --query "Environments[0].CNAME" --output text --region "$REGION")
 echo -e "\033[32mBeanstalk URL: $BEANSTALK_URL [✓] \033[0m"
+echo -e "\033[32mDeployment success[✓] \033[0m"
