@@ -84,5 +84,5 @@ done
 
 echo -e "\033[33mRetrieving Beanstalk URL\033[0m"
 BEANSTALK_URL=$(aws elasticbeanstalk describe-environments --application-name "$APPLICATION_NAME" --environment-names "$ENVIRONMENT_NAME" --query "Environments[0].CNAME" --output text --region "$REGION")
-echo -e "\033[32mBeanstalk URL: $BEANSTALK_URL [✓] \033[0m"
+echo -e "\033[32mBeanstalk URL: https://$BEANSTALK_URL [✓] \033[0m"
 echo -e "\033[32mDeployment success[✓] \033[0m"
