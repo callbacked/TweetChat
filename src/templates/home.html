@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Social Media Bot</title>
+    <style>      
+        .container {
+            background-color: #fff;
+            border: 2px solid #dedede;
+            border-radius: 5px;
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%;
+        }
+        
+        .container::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        
+        .container img {
+            float: left;
+            max-width: 50%;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+        
+        .container img.right {
+            float: right;
+            margin-left: 20px;
+            margin-right:0;
+        }
+        
+        .time-right {
+            float: right;
+            color: #aaa;
+        }
+        
+        .time-left {
+            float: left;
+            color: #999;
+        }
+        
+        .search-area {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.search-form {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+        
+        .search-form input[type=text] {
+            padding: 10px;
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        
+        .search-form button[type=submit] {
+            background-color: #3279CD;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .search-form button[type=submit]:hover {
+            background-color: #45a049;
+        }
+        
+        .chat-area {
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .chat-area p {
+            clear: both;
+            margin: 10px 0;
+        }
+        
+        .chat-area p.left {
+            text-align: left;
+        }
+        
+        .chat-area p.right {
+            text-align: right;
+        }
+        
+        .chat-bubble {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .chat-bubble p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .chat-bubble .username {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .chat-bubble .timestamp {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.bot-bubble {
+    background-color: #747474;
+    border: 1px solid #747474;
+    color: white;
+    border-radius: px;
+    padding: 10px;
+    display: inline-block;
+}
+
+.program-bubble {
+    background-color: #747474;
+    border: 1px solid #747474;
+    color:white;
+    border-radius: 5px;
+    padding: 10px;
+    display: inline-block;
+}
+
+.user-bubble {
+    background-color: #1982FC;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    float: right;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    background-color: #fff;
+    border: 2px solid #dedede;
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 1px;
+    width: 78.5%;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
+.bot-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.info-btn {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    color: #3279CD;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+.info-btn:hover {
+    color: #3b87e6;
+}
+
+
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+}
+
+
+.modal.visible {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.5s; 
+}
+
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.modal-content pre {
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dark-theme {
+    background-color: #333;
+    color: #f1f1f1;
+}
+
+.dark-theme .user-bubble {
+    background-color: #1982FC;
+    color: white;
+}
+
+.dark-theme .header,
+.dark-theme .container {
+    background-color: #444;
+    border-color: #333;
+}
+
+.dark-theme .search-form {
+    background-color: #444;
+}
+
+
+.dark-theme .search-form input[type=text] {
+    background-color: #333;
+    color: #f1f1f1;
+}
+
+.dark-theme .search-form button[type=submit]:hover {
+    background-color: #3b87e6;
+}
+
+.dark-theme body {
+    background-color: #333;
+}
+
+.dark-theme .modal-content {
+    background-color: #333;
+    color: #f1f1f1;
+}
+
+.container > * {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+    animation: fadeIn 0.5s forwards;
+}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <button class="info-btn">&#9432;</button>
+        <img src="https://twitter-chatbot-scraper-bucket.s3.amazonaws.com/bot-icon.png" alt="Avatar" class="avatar">
+        <span class="bot-name">Twitter Chatbot Scraper</span>
+        <button id="theme-toggle" class="theme-toggle" style="position:absolute;right:20px;font-size:24px;">&#9728;</button>
+    </div>
+    
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <pre>Made with love by Group 4:
+        - Alex 
+        - Derek
+        - Jessica
+        - Rish
+    </pre>
+        </div>
+    </div>
+
+    <div class="container">
+        <img src="https://twitter-chatbot-scraper-bucket.s3.amazonaws.com/bot-icon.png" alt="Avatar" class="avatar">
+        <p>
+            <span class="bot-bubble">Hello! How can I help you today?</span>
+        </p>
+        {% if chat_bubbles %}
+        {% for bubble in chat_bubbles %}
+            {% if bubble.user_input %}
+                <p class="right"><span class="user-bubble">{{ bubble.text }}</span></p>
+                <p class="right"><span class="timestamp">{{ bubble.timestamp }}</span></p>
+            {% elif bubble.username == 'You' %}
+                <p class="right"><span class="chat-bubble"><span class="username">{{ bubble.username }}</span><br>{{ bubble.text }}</span></p>
+                <p class="right"><span class="timestamp">{{ bubble.timestamp }}</span></p>
+            {% else %}
+                <p class="left"><span class="program-bubble"><span class="username">{{ bubble.username }}</span><br>{{ bubble.text }}</span></p>
+                <p class="left"><span class="timestamp">{{ bubble.timestamp }}</span></p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    </div>
+    <div class="search-area">
+        <form class="search-form" onsubmit="event.preventDefault(); searchTweets();">
+            <input type="text" name="keyword" placeholder="Search results for...">
+            <button type="submit">Search</button>
+        </form>
+
+        <script>
+            var modal = document.getElementById("infoModal");
+            var btn = document.querySelector(".info-btn");
+            var span = document.getElementsByClassName("close")[0];
+            btn.onclick = function() {
+                modal.classList.add("visible");
+            }
+            span.onclick = function() {
+                modal.classList.remove("visible");
+            }
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.classList.remove("visible");
+                }
+            }
+
+    var htmlElement = document.documentElement;
+    var themeToggleButton = document.getElementById('theme-toggle');
+
+    // theme stuff
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        htmlElement.classList.add('dark-theme');
+        themeToggleButton.innerHTML = '&#9788;'; // Sun icon
+    } else {
+        htmlElement.classList.remove('dark-theme');
+        themeToggleButton.innerHTML = '&#9790;'; // Moon icon
+    }
+    function searchTweets() {
+    const keywordInput = document.querySelector('.search-form input[type=text]');
+    const keyword = keywordInput.value;
+
+    fetch(`/search?keyword=${encodeURIComponent(keyword)}`)
+        .then(response => response.json())
+        .then(chatBubbles => {
+
+            const container = document.querySelector('.container');
+            container.innerHTML = ''; 
+
+            for (const bubble of chatBubbles) {
+                let bubbleElement;
+
+                if (bubble.user_input) {
+                    bubbleElement = `
+                        <p class="right"><span class="user-bubble">${bubble.text}</span></p>
+                        <p class="right"><span class="timestamp">${bubble.timestamp}</span></p>
+                    `;
+                } else if (bubble.username === 'You') {
+                    bubbleElement = `
+                        <p class="right"><span class="chat-bubble"><span class="username">${bubble.username}</span><br>${bubble.text}</span></p>
+                        <p class="right"><span class="timestamp">${bubble.timestamp}</span></p>
+                    `;
+                } else {
+                    bubbleElement = `
+                        <p class="left"><span class="program-bubble"><span class="username">${bubble.username}</span><br>${bubble.text}</span></p>
+                        <p class="left"><span class="timestamp">${bubble.timestamp}</span></p>
+                    `;
+                }
+
+                container.innerHTML += bubbleElement;
+            }
+        });
+}
+
+    themeToggleButton.onclick = function() {
+        htmlElement.classList.toggle('dark-theme');
+        if (htmlElement.classList.contains('dark-theme')) {
+            themeToggleButton.innerHTML = '&#9788;'; 
+        } else {
+            themeToggleButton.innerHTML = '&#9790;';  
+        }
+    }
+var searchForm = document.querySelector('.search-form');
+searchForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    var keyword = searchForm.elements['keyword'].value;
+
+
+    fetch('/search?keyword=' + encodeURIComponent(keyword))
+        .then(function (response) {
+            return response.text();
+        })
+        .then(function (html) {
+            var parser = new DOMParser();
+            var newDoc = parser.parseFromString(html, 'text/html');
+            var newContainer = newDoc.querySelector('.container');
+            var currentContainer = document.querySelector('.container');
+            currentContainer.innerHTML = newContainer.innerHTML;
+            searchForm.elements['keyword'].value = '';
+        })
+        .catch(function (error) {
+            console.error('Error fetching search results:', error);
+        });
+});
+    // note: DONT FORGET TO CHANGE URLS AFTER PROTOTYPING
+    // note 2: seperate styles into styles.css 
+    // note 3: change profile pic of the bot
+</script>
+</body>
+</html>
