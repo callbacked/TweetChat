@@ -72,4 +72,4 @@ aws s3 rb "s3://$S3_BUCKET_NAME" --force
 echo -e "\033[32mS3 Bucket successfully removed [✓] \033[0m"
 
 
-echo -e "\033[Deployment cleanup successful\033[0m"
+echo -e "\033[32mDeployment cleanup success [✓] \033[0m"
