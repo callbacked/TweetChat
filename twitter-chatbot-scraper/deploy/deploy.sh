@@ -17,6 +17,19 @@ else
   aws s3api create-bucket --bucket "$S3_BUCKET_NAME" --region "$REGION" --create-bucket-configuration LocationConstraint="$REGION"
 fi
 
+aws s3api put-bucket-policy --bucket "$S3_BUCKET_NAME" --policy '{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::'"$S3_BUCKET_NAME"'/*"
+    }
+  ]
+}'
+
 # Upload final.zip to S3 bucket
 aws s3 cp "./final.zip" "s3://$S3_BUCKET_NAME/$S3_KEY"
 aws s3 cp "./assets/bot-icon.png" "s3://twitter-chatbot-scraper-bucket"
