@@ -19,10 +19,6 @@ aws elasticbeanstalk wait environment-terminated \
     --environment-name "$ENVIRONMENT_NAME" \
     --region "$REGION"
 
-# Delete the Elastic Beanstalk environment
-aws elasticbeanstalk delete-environment \
-    --environment-name "$ENVIRONMENT_NAME" \
-    --region "$REGION"
 
 # Delete the Elastic Beanstalk application version
 aws elasticbeanstalk delete-application-version \
