@@ -8,6 +8,10 @@ PLATFORM_VERSION="64bit Amazon Linux 2 v3.5.1 running Python 3.8"
 INSTANCE_PROFILE_NAME="ElasticBeanstalkInstanceProfile"
 ROLE_NAME="ElasticBeanstalkInstanceProfileRole"
 
+read -sp "Please enter your API key (input will be hidden): " API_KEY
+echo
+
+
 echo -e "\033[33mCreating S3 Bucket and uploading contents\033[0m"
 if [ "$REGION" == "us-east-1" ]; then
   aws s3api create-bucket --bucket "$S3_BUCKET_NAME" --region "$REGION"
@@ -64,7 +68,9 @@ aws elasticbeanstalk create-environment \
   --solution-stack-name "$PLATFORM_VERSION" \
   --version-label "v1" \
   --option-settings Namespace=aws:elasticbeanstalk:application:environment,OptionName=PYTHON_ENV,Value=python3.8 \
-                    Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value="$INSTANCE_PROFILE_NAME"
+                    Namespace=aws:autoscaling:launchconfiguration,OptionName=IamInstanceProfile,Value="$INSTANCE_PROFILE_NAME" \
+                    Namespace=aws:elasticbeanstalk:application:environment,OptionName=API_KEY,Value="$API_KEY"
+
 
 echo -e "\033[33mWaiting for environment to finish launching\033[0m"
 
