@@ -9,10 +9,7 @@ import os
 
 application = Flask(__name__)
 
-auth = tweepy.OAuth2BearerHandler(
-    "AAAAAAAAAAAAAAAAAAAAAPcQKQEAAAAA7pw20O9E5a6AXQFajxRsK6xj5zA%3DDsUWXed2WMoEzyPB1fvTiBSqxTeDEjOw3JgsrFzr8GI4HI8SLe"
-)
-
+auth = tweepy.OAuth2BearerHandler(os.environ['API_KEY'])
 api = tweepy.API(auth)
 
 #Create list to hold tweets until they're dumped into JSON
