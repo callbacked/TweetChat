@@ -10,4 +10,4 @@ Project gives a python based twitter scraper that a user can interact with. Give
 related tweets to that topic.
 
 
-**Note: API keys that are shown in the git history have long been revoked** :)
+**Note: API keys that are shown in the repo history have long been revoked** :)
